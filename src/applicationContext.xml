@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+    
+        <!-- 启用spring注解配置 -->
+
+
+    <!-- aop配置 -->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+    
+    <mvc:annotation-driven validator="validator"></mvc:annotation-driven>
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+    
+    <property name="providerClass" value="org.hibernate.validator.HibernateValidator"></property>
+    </bean>
+   
+    
+    <context:annotation-config></context:annotation-config>
+    
+    <context:component-scan base-package="ssm.lxh"></context:component-scan>
+    
+   <!--数据源 -->
+   
+   <bean id="mb" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+    	<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"></property>
+    	<property name="username" value="scott"></property>
+    	<property name="password" value="tiger"></property>
+  
+   </bean>
+   
+   <!-- 客户端组件 -->
+   <bean id="sqlfactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+   <property name="dataSource" ref="mb"></property>
+   <property name="mapperLocations" value="classpath:ssm/lxh/mapper/*.xml"></property>
+   </bean>
+   
+       <!-- 自动扫描并加载dao组件 -->
+   
+<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="ssm.lxh.mapper" /><!--指定接口所在的包-->
+        <property name="sqlSessionFactory" ref="sqlfactory" />
+    </bean>
+    
+    </beans>
